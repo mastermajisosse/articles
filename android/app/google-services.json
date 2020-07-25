@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "174850842019",
+    "firebase_url": "https://afaq-53b6c.firebaseio.com",
+    "project_id": "afaq-53b6c",
+    "storage_bucket": "afaq-53b6c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:174850842019:android:086652af69e3e555f3ce16",
+        "android_client_info": {
+          "package_name": "com.otot.afaq"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "174850842019-pg1ki6uqf4i0e4klbvb5tdu224k8ab60.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByb-LeVlsIQae4-fIckh3ndvlB5bTgDKo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "174850842019-pg1ki6uqf4i0e4klbvb5tdu224k8ab60.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
