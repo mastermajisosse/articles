@@ -26,31 +26,22 @@ class UserRepository {
   }
 
   Future<void> signInWithCredentials(String email, String password) async {
-    try {
-      AuthResult result = await _firebaseAuth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      FirebaseUser user = result.user;
-      return _userFromFirebaseUser(user);
-    } catch (e) {
-      return e.message.toString();
-    }
+    AuthResult result = await _firebaseAuth.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    return _userFromFirebaseUser(result.user);
   }
 
   Future<void> signUp({User myuser, pass}) async {
-    try {
-      AuthResult result = await _firebaseAuth.createUserWithEmailAndPassword(
-        email: myuser.email,
-        password: pass,
-      );
-      FirebaseUser user = result.user;
-      myuser.uid = user.uid;
-      UserDataBaseRepo().updateUserData(myuser);
-      return _userFromFirebaseUser(user);
-    } catch (e) {
-      return e.message.toString();
-    }
+    AuthResult result = await _firebaseAuth.createUserWithEmailAndPassword(
+      email: myuser.email,
+      password: pass,
+    );
+    FirebaseUser user = result.user;
+    myuser.uid = user.uid;
+    UserDataBaseRepo().updateUserData(myuser);
+    return _userFromFirebaseUser(user);
   }
 
   Future<void> signOut() async {
@@ -67,5 +58,9 @@ class UserRepository {
 
   Future<String> getUser() async {
     return (await _firebaseAuth.currentUser()).uid;
+  }
+
+  Future<String> getUserName() async {
+    return (await _firebaseAuth.currentUser()).displayName;
   }
 }

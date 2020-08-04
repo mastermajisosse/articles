@@ -7,7 +7,9 @@ class ArticleModel {
   String body;
   String authorName;
   String authorimg;
-  String date;
+  DateTime date;
+  String country;
+  String tags;
 
   ArticleModel({
     this.id,
@@ -17,6 +19,8 @@ class ArticleModel {
     this.authorName,
     this.authorimg,
     this.date,
+    this.country,
+    this.tags,
   });
 
   static ArticleModel fromData(Map<dynamic, dynamic> map) {
@@ -29,18 +33,22 @@ class ArticleModel {
       authorName: map['authorName'],
       authorimg: map['authorimg'],
       date: map['date'],
+      country: map['country'],
+      tags: map['tags'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id ?? "",
+      "id": id ?? "",
       'image': image ?? "",
       'title': title ?? "",
       'body': body ?? "",
       'authorName': authorName ?? "",
       'authorimg': authorimg ?? "",
-      'date': date ?? "",
+      'date': date ?? DateTime.now(),
+      'country': country ?? "",
+      'tags': tags ?? "",
     };
   }
 
@@ -53,6 +61,8 @@ class ArticleModel {
       authorName: authorName,
       authorimg: authorimg,
       date: date,
+      country: country,
+      tags: tags,
     );
   }
 
@@ -64,12 +74,15 @@ class ArticleModel {
       body: snap.data['body'],
       authorName: snap.data['authorName'],
       authorimg: snap.data['authorimg'],
-      date: snap.data['date'],
+      date: snap.data['date'].toDate(),
+      // date: snap.data['date'],
+      country: snap.data['country'],
+      tags: snap.data['tags'],
     );
   }
 
   @override
   String toString() {
-    return 'Article { complete: $id, task: $title, note: $body, id: $date }';
+    return 'Article { complete: $id, task: $title, note: $body, id: $date authorName:$authorName }';
   }
 }

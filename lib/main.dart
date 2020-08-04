@@ -43,10 +43,10 @@ class MyApp extends StatelessWidget {
                   ..add(AuthenticationStarted()),
           ),
           BlocProvider<LoginBloc>(
-            create: (context) => LoginBloc(userRepository: UserRepository()),
+            create: (context) => LoginBloc(userRepository: _userRepository),
           ),
           BlocProvider<RegisterBloc>(
-            create: (context) => RegisterBloc(userRepository: UserRepository()),
+            create: (context) => RegisterBloc(userRepository: _userRepository),
           ),
           BlocProvider<ArticlesBloc>(
             create: (context) =>
@@ -78,9 +78,9 @@ class _MiddleManState extends State<MiddleMan> {
         if (state is AuthenticationSuccess) {
           return TabsScreen();
         }
-        if (state is AuthenticationInitial) {
-          return SplashScreen();
-        }
+        // if (state is AuthenticationInitial) {
+        //   return SplashScreen();
+        // }
         if (state is AuthenticationFailure) {
           return TabAuthPage();
         }

@@ -1,18 +1,12 @@
+import 'package:afaq/models/article_model.dart';
 import 'package:afaq/utils/mystyle.dart';
 import 'package:afaq/utils/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart' as intl;
 
 class HomeScreenDetails extends StatefulWidget {
-  final image, title, author, date, body, imageauth, likes;
-  HomeScreenDetails({
-    this.image,
-    this.date,
-    this.title,
-    this.author,
-    this.imageauth,
-    this.likes,
-    this.body,
-  });
+  final ArticleModel articleModel;
+  HomeScreenDetails({this.articleModel});
 
   @override
   _HomeScreenDetailsState createState() => _HomeScreenDetailsState();
@@ -40,7 +34,7 @@ class _HomeScreenDetailsState extends State<HomeScreenDetails> {
                         height: SizeConfig.heightbox * 10,
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: NetworkImage(widget.image),
+                            image: NetworkImage(widget.articleModel.image),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -64,7 +58,10 @@ class _HomeScreenDetailsState extends State<HomeScreenDetails> {
                         alignment: Alignment.topRight,
                         padding: EdgeInsets.symmetric(horizontal: 24.0),
                         child: Text(
-                          widget.date,
+                          intl.DateFormat.yMd()
+                              .format(widget.articleModel.date),
+                          // .toString(),
+                          // widget.articleModel.date,
                           style: TextStyle(fontSize: 16, color: Colors.grey),
                         ),
                       ),
@@ -72,7 +69,7 @@ class _HomeScreenDetailsState extends State<HomeScreenDetails> {
                         alignment: Alignment.topRight,
                         padding: EdgeInsets.symmetric(horizontal: 24.0),
                         child: Text(
-                          widget.title,
+                          widget.articleModel.title,
                           style: Mystyle.titleTextStyle,
                         ),
                       ),
@@ -90,12 +87,13 @@ class _HomeScreenDetailsState extends State<HomeScreenDetails> {
                                 Container(
                                   width: 35,
                                   height: 35,
-                                  decoration:
-                                      Mystyle.roundPic(widget.imageauth),
+                                  decoration: Mystyle.roundPic(
+                                    widget.articleModel.authorimg,
+                                  ),
                                 ),
                                 SizedBox(width: SizeConfig.blockSizeVertical),
                                 Text(
-                                  widget.author,
+                                  widget.articleModel.authorName,
                                   style: Mystyle.regularTextStyle,
                                 ),
                               ],
@@ -122,7 +120,7 @@ class _HomeScreenDetailsState extends State<HomeScreenDetails> {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 24.0),
                         child: Text(
-                          widget.body,
+                          widget.articleModel.body,
                           style: TextStyle(fontSize: 16, height: 1.2),
                         ),
                       ),

@@ -1,7 +1,10 @@
 import 'dart:async';
 
 import 'package:afaq/models/article_model.dart';
+import 'package:afaq/repository/uploadImage_repo.dart';
+import 'package:afaq/repository/user_auth_repo.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 abstract class Rep {
   Stream<List<ArticleModel>> article();
@@ -12,23 +15,33 @@ class ArticlesRepo {
 
   final articlesCollection = Firestore.instance.collection('articles');
 
-  Future<void> addNewTodo(ArticleModel articleModel) {
-    return articlesCollection.add(articleModel.toEntity().toJson());
+  Future<void> addNewArticles(ArticleModel articleModel, file) async {
+    // need nicer way to make
+    // articleModel.authorName = await UserRepository().getUserName();
+    return UploadImage().tofireBase(articleModel, file);
+
+    // articlesCollection.add(articleModel.toEntity().toJson());
   }
 
-  Future<void> deleteTodo(ArticleModel articleModel) async {
+  Future<void> deleteArticles(ArticleModel articleModel) async {
     return articlesCollection.document(articleModel.id).delete();
   }
 
   Stream<List<ArticleModel>> articles() {
-    return articlesCollection.snapshots().map((snapshot) {
+    return articlesCollection
+        .orderBy(
+          'date',
+          descending: false,
+        )
+        .snapshots()
+        .map((snapshot) {
       return snapshot.documents
           .map((doc) => ArticleModel.fromSnapshot(doc))
           .toList();
     });
   }
 
-  Future<void> updateTodo(ArticleModel update) {
+  Future<void> updateArticles(ArticleModel update) {
     return articlesCollection
         .document(update.id)
         .updateData(update.toEntity().toJson());

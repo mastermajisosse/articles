@@ -32,3 +32,17 @@ class ArticleLoadFailure extends ArticlesState {
   // TODO: implement props
   List<Object> get props => [message];
 }
+
+class ArticleAddSuccess extends ArticlesState {
+  ArticleModel articleModel;
+
+  ArticleAddSuccess({this.articleModel});
+
+  @override
+  // TODO: implement props
+  List<Object> get props => [articleModel];
+}
+
+class ArticleAddErr extends ArticlesState {}
+
+class ArticleAddLoading extends ArticlesState {}

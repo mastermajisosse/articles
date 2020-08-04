@@ -2,6 +2,8 @@
 // import 'bloc.dart';
 
 // @immutable/
+import 'dart:io';
+
 import 'package:afaq/models/article_model.dart';
 
 abstract class ArticlesEvent {}
@@ -9,15 +11,16 @@ abstract class ArticlesEvent {}
 class ArticlesLoadSuccessE extends ArticlesEvent {}
 
 class ArticleAdded extends ArticlesEvent {
-  final List<ArticleModel> article;
+  final ArticleModel article;
+  final File file;
 
-  ArticleAdded(this.article);
+  ArticleAdded(this.article, this.file);
 
   @override
   List<Object> get props => [article];
 
   @override
-  String toString() => 'articleAdded { article: $article }';
+  String toString() => 'articleAdded { article: $article } , ${file.path}';
 }
 
 class ArticleUpdated extends ArticlesEvent {

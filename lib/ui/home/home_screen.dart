@@ -1,5 +1,6 @@
 import 'package:afaq/bloc/articles/articles_bloc.dart';
 import 'package:afaq/bloc/articles/bloc.dart';
+import 'package:afaq/models/article_model.dart';
 import 'package:afaq/models/user_model.dart';
 import 'package:afaq/repository/user_auth_repo.dart';
 import 'package:afaq/repository/user_database_repo.dart';
@@ -15,12 +16,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String desc =
-      "مكن تعلم العزف على الجيتار من خلال تعلم كيفية حمل الجيتار بشكل صحيح، حيث يجب التمسك بالأوتار باليد اليمنى بين منتصف ثقب الصوت والجسر، ولمس أوتار العنق باليد اليسرى، كما يجب الجلوس بشكل مستقيم ثمّ حمل الجيتار بحيث يكون جزء الأوتار الصغيرة متوجهة";
-  String url =
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png";
-  String id;
-
+  var noimg =
+      "https://www.coraf.org/wp-content/themes/consultix/images/no-image-found-360x250.png";
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -30,9 +27,9 @@ class _HomeScreenState extends State<HomeScreen> {
           if (state is ArticleLoadInProgress) {
             return Center(child: CircularProgressIndicator());
           } else if (state is ArticleLoadSuccesS) {
-            // final articlesofmonth = state
-            // .articles
-            // .firstWhere((article) => article.id == 0, orElse: () => null);
+            final articlesofmonth = state.articles
+                .firstWhere((article) => article.id == "1", orElse: () => null);
+            var othersub = state.articles.skip(1);
 
             return Directionality(
               textDirection: TextDirection.rtl,
@@ -70,14 +67,15 @@ class _HomeScreenState extends State<HomeScreen> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => HomeScreenDetails(
-                                  image: url,
-                                  date: 'مند 3 ساعات',
-                                  title: "تعلم العزف على الجيتار",
-                                  author: "المجيد عيعي",
-                                  imageauth: url,
-                                  likes: "22",
-                                  body: desc,
-                                ),
+                                    articleModel: ArticleModel(
+                                  image: articlesofmonth.image ?? noimg,
+                                  date: articlesofmonth.date,
+                                  title: articlesofmonth.title,
+                                  authorName: articlesofmonth.authorName,
+                                  authorimg: articlesofmonth.authorimg ?? noimg,
+                                  // likes: "22",
+                                  body: articlesofmonth.body,
+                                )),
                               ),
                             );
                           },
@@ -86,8 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             decoration: BoxDecoration(
                               color: Colors.grey[700],
                               image: DecorationImage(
-                                image: NetworkImage(url),
-                                // state.articles.first.image,
+                                image: NetworkImage(articlesofmonth.image),
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -100,8 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Text(
-                                    // "أشياء يمكنك القيام بها لأكتر انتاجية",
-                                    state.articles.first.title,
+                                    articlesofmonth.title,
                                     style: Mystyle.monthtopicTextStyle,
                                   ),
                                   Row(
@@ -110,14 +106,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                         width: 35,
                                         height: 35,
                                         decoration: Mystyle.roundPic(
-                                          url, //state.articles.first.authimg,
+                                          articlesofmonth.authorimg,
                                         ),
                                       ),
                                       SizedBox(
                                           width: SizeConfig.blockSizeVertical),
                                       Text(
-                                        // "المجيد عيعي",
-                                        state.articles.first.authorName,
+                                        articlesofmonth.authorName,
                                         style: Mystyle.monthtopicTextStyle
                                             .copyWith(
                                           fontSize: 18,
@@ -136,21 +131,30 @@ class _HomeScreenState extends State<HomeScreen> {
                           style: Mystyle.newtopicTextStyle,
                         ),
                         Column(
-                          children:
-                              List.generate(state.articles.length, (index) {
+                          children: List.generate(othersub.length, (index) {
+                            String minimage = othersub.elementAt(index).image;
+                            String imageauth =
+                                othersub.elementAt(index).authorimg;
                             return InkWell(
                               onTap: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => HomeScreenDetails(
-                                      image: url,
-                                      date: 'مند 3 ساعات',
-                                      title: "تعلم العزف على الجيتار",
-                                      author: "المجيد عيعي",
-                                      imageauth: url,
-                                      likes: "22",
-                                      body: desc,
+                                      articleModel: ArticleModel(
+                                        image:
+                                            minimage.isEmpty ? noimg : minimage,
+                                        date: othersub.elementAt(index).date,
+                                        title: othersub.elementAt(index).title,
+                                        authorName: othersub
+                                            .elementAt(index)
+                                            .authorName,
+                                        authorimg: imageauth.isEmpty
+                                            ? noimg
+                                            : imageauth,
+                                        // likes: "22",
+                                        body: othersub.elementAt(index).body,
+                                      ),
                                     ),
                                   ),
                                 );
@@ -172,8 +176,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                           color: Colors.grey[600],
                                           image: DecorationImage(
                                             image: NetworkImage(
-                                              "https://www.eksirtech.ir/imobile/imobile.png",
-                                              // state.articles[index].authimg,
+                                              // "https://www.eksirtech.ir/imobile/imobile.png",
+                                              minimage.isEmpty
+                                                  ? noimg
+                                                  : minimage,
                                             ),
                                             fit: BoxFit.cover,
                                           ),
@@ -190,7 +196,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           children: <Widget>[
                                             Text(
                                               // "كيف تنتج الليمون بدون حموضة",
-                                              state.articles[index].title,
+                                              othersub.elementAt(index).title,
                                               style:
                                                   Mystyle.regulartitleTextStyle,
                                               overflow: TextOverflow.ellipsis,
@@ -198,7 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             Flexible(
                                               child: Text(
                                                 // desc,
-                                                state.articles[index].body,
+                                                othersub.elementAt(index).body,
 
                                                 style: Mystyle.regularTextStyle,
                                                 overflow: TextOverflow.ellipsis,

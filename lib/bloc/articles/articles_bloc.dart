@@ -14,8 +14,8 @@ class ArticlesBloc extends Bloc<ArticlesEvent, ArticlesState> {
   Stream<ArticlesState> mapEventToState(ArticlesEvent event) async* {
     if (event is ArticlesLoadSuccessE) {
       yield* _mapLoadArticlessToState();
-      // } else if (event is ArticleAdded) {
-      // yield* _mapAddArticlesToState(event);
+    } else if (event is ArticleAdded) {
+      yield* _mapAddArticlesToState(event);
       // } else if (event is UpdateArticles) {
       //   yield* _mapUpdateArticlesToState(event);
       // } else if (event is DeleteArticles) {
@@ -30,7 +30,6 @@ class ArticlesBloc extends Bloc<ArticlesEvent, ArticlesState> {
   }
 
   Stream<ArticlesState> _mapLoadArticlessToState() async* {
-    List<ArticleModel> articles;
     try {
       articlesSubscription?.cancel();
       articlesSubscription = articlesRepository.articles().listen((articles) {
@@ -41,9 +40,15 @@ class ArticlesBloc extends Bloc<ArticlesEvent, ArticlesState> {
     }
   }
 
-  // Stream<ArticlesState> _mapAddArticlesToState(AddArticles event) async* {
-  //   articlesRepository.addNewArticles(event.todo);
-  // }
+  Stream<ArticlesState> _mapAddArticlesToState(ArticleAdded event) async* {
+    yield ArticleAddLoading();
+    try {
+      await articlesRepository.addNewArticles(event.article, event.file);
+      yield ArticleAddSuccess();
+    } catch (_) {
+      yield ArticleAddErr();
+    }
+  }
 
   // Stream<ArticlesState> _mapUpdateArticlesToState(UpdateArticles event) async* {
   //   articlesRepository.updateArticles(event.updatedArticles);
