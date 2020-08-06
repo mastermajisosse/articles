@@ -13,6 +13,18 @@ class ArticleLoadInProgress extends ArticlesState {
 
 class ArticleLoadSuccesS extends ArticlesState {
   List<ArticleModel> articles;
+  List other = List();
+
+  articlesofmonth() {
+    return articles.firstWhere((article) => article.id == "1",
+        orElse: () => null);
+  }
+
+  List myother() {
+    other = articles;
+    // other.removeWhere((article) => article.id == "1");
+    return other;
+  }
 
   ArticleLoadSuccesS({this.articles});
 

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:afaq/repository/user_auth_repo.dart';
 
 import 'package:afaq/bloc/articles/articles_bloc.dart';
 import 'package:afaq/bloc/articles/bloc.dart';
@@ -9,6 +10,7 @@ import 'package:afaq/utils/mystyle.dart';
 import 'package:afaq/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:afaq/models/user_model.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddScreen extends StatefulWidget {
@@ -19,6 +21,8 @@ class AddScreen extends StatefulWidget {
 class _AddScreenState extends State<AddScreen> {
   final _formKey = GlobalKey<FormState>();
   File image;
+
+  User user;
 
   final TextEditingController title = TextEditingController();
   final TextEditingController tags = TextEditingController();
@@ -38,6 +42,7 @@ class _AddScreenState extends State<AddScreen> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    // print(UserRepository().user.uid);
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(MediaQuery.of(context).size.height / 12),
@@ -262,6 +267,8 @@ class _AddScreenState extends State<AddScreen> {
             SizedBox(height: SizeConfig.paddingVertical * 2),
             InkWell(
               onTap: () {
+                FocusScope.of(context).unfocus();
+
                 if (_formKey.currentState.validate() && isEnabled(state))
                   // _formKey.currentState.validate();
                   BlocProvider.of<ArticlesBloc>(context).add(
@@ -269,7 +276,6 @@ class _AddScreenState extends State<AddScreen> {
                       ArticleModel(
                         id: "",
                         authorimg: "",
-                        // authorName: ,
                         title: title.text,
                         tags: tags.text,
                         body: body.text,

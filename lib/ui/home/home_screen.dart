@@ -1,11 +1,9 @@
 import 'package:afaq/bloc/articles/articles_bloc.dart';
 import 'package:afaq/bloc/articles/bloc.dart';
 import 'package:afaq/models/article_model.dart';
-import 'package:afaq/models/user_model.dart';
-import 'package:afaq/repository/user_auth_repo.dart';
-import 'package:afaq/repository/user_database_repo.dart';
 import 'package:afaq/ui/home/homedetails_screen.dart';
 import 'package:afaq/utils/mystyle.dart';
+import 'package:afaq/ui/tabs_screen.dart';
 import 'package:afaq/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,10 +25,6 @@ class _HomeScreenState extends State<HomeScreen> {
           if (state is ArticleLoadInProgress) {
             return Center(child: CircularProgressIndicator());
           } else if (state is ArticleLoadSuccesS) {
-            final articlesofmonth = state.articles
-                .firstWhere((article) => article.id == "1", orElse: () => null);
-            var othersub = state.articles.skip(1);
-
             return Directionality(
               textDirection: TextDirection.rtl,
               child: Padding(
@@ -54,8 +48,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                 size: 32,
                               ),
                               onPressed: () async {
-                                UserDataBaseRepo()
-                                    .profile(await UserRepository().getUser());
+                                MaterialPageRoute(builder: (_) {
+                                  return BlocProvider.value(
+                                    value:
+                                        BlocProvider.of<ArticlesBloc>(context),
+                                    child: TabsScreen(),
+                                  );
+                                });
+                                // UserDataBaseRepo()
+                                //     .profile(await UserRepository().getUser());
                               },
                             )
                           ],
@@ -68,13 +69,14 @@ class _HomeScreenState extends State<HomeScreen> {
                               MaterialPageRoute(
                                 builder: (context) => HomeScreenDetails(
                                     articleModel: ArticleModel(
-                                  image: articlesofmonth.image ?? noimg,
-                                  date: articlesofmonth.date,
-                                  title: articlesofmonth.title,
-                                  authorName: articlesofmonth.authorName,
-                                  authorimg: articlesofmonth.authorimg ?? noimg,
+                                  image: state.articlesofmonth().image,
+                                  date: state.articlesofmonth().date,
+                                  title: state.articlesofmonth().title,
+                                  authorName:
+                                      state.articlesofmonth().authorName,
+                                  authorimg: state.articlesofmonth().authorimg,
                                   // likes: "22",
-                                  body: articlesofmonth.body,
+                                  body: state.articlesofmonth().body,
                                 )),
                               ),
                             );
@@ -84,7 +86,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             decoration: BoxDecoration(
                               color: Colors.grey[700],
                               image: DecorationImage(
-                                image: NetworkImage(articlesofmonth.image),
+                                image:
+                                    NetworkImage(state.articlesofmonth().image),
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -97,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Text(
-                                    articlesofmonth.title,
+                                    state.articlesofmonth().title,
                                     style: Mystyle.monthtopicTextStyle,
                                   ),
                                   Row(
@@ -106,13 +109,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                         width: 35,
                                         height: 35,
                                         decoration: Mystyle.roundPic(
-                                          articlesofmonth.authorimg,
+                                          state.articlesofmonth().authorimg,
                                         ),
                                       ),
                                       SizedBox(
                                           width: SizeConfig.blockSizeVertical),
                                       Text(
-                                        articlesofmonth.authorName,
+                                        state.articlesofmonth().authorName,
                                         style: Mystyle.monthtopicTextStyle
                                             .copyWith(
                                           fontSize: 18,
@@ -131,10 +134,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           style: Mystyle.newtopicTextStyle,
                         ),
                         Column(
-                          children: List.generate(othersub.length, (index) {
-                            String minimage = othersub.elementAt(index).image;
-                            String imageauth =
-                                othersub.elementAt(index).authorimg;
+                          children: List.generate(state.myother().length - 1,
+                              (index) {
                             return InkWell(
                               onTap: () {
                                 Navigator.push(
@@ -142,18 +143,31 @@ class _HomeScreenState extends State<HomeScreen> {
                                   MaterialPageRoute(
                                     builder: (context) => HomeScreenDetails(
                                       articleModel: ArticleModel(
-                                        image:
-                                            minimage.isEmpty ? noimg : minimage,
-                                        date: othersub.elementAt(index).date,
-                                        title: othersub.elementAt(index).title,
-                                        authorName: othersub
+                                        image: state
+                                            .myother()
+                                            .elementAt(index)
+                                            .image,
+                                        date: state
+                                            .myother()
+                                            .elementAt(index)
+                                            .date,
+                                        title: state
+                                            .myother()
+                                            .elementAt(index)
+                                            .title,
+                                        authorName: state
+                                            .myother()
                                             .elementAt(index)
                                             .authorName,
-                                        authorimg: imageauth.isEmpty
-                                            ? noimg
-                                            : imageauth,
+                                        authorimg: state
+                                            .myother()
+                                            .elementAt(index)
+                                            .authorimg,
                                         // likes: "22",
-                                        body: othersub.elementAt(index).body,
+                                        body: state
+                                            .myother()
+                                            .elementAt(index)
+                                            .body,
                                       ),
                                     ),
                                   ),
@@ -177,9 +191,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                           image: DecorationImage(
                                             image: NetworkImage(
                                               // "https://www.eksirtech.ir/imobile/imobile.png",
-                                              minimage.isEmpty
-                                                  ? noimg
-                                                  : minimage,
+                                              state
+                                                  .myother()
+                                                  .elementAt(index)
+                                                  .image,
                                             ),
                                             fit: BoxFit.cover,
                                           ),
@@ -196,7 +211,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                           children: <Widget>[
                                             Text(
                                               // "كيف تنتج الليمون بدون حموضة",
-                                              othersub.elementAt(index).title,
+                                              state
+                                                  .myother()
+                                                  .elementAt(index)
+                                                  .title,
                                               style:
                                                   Mystyle.regulartitleTextStyle,
                                               overflow: TextOverflow.ellipsis,
@@ -204,7 +222,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                             Flexible(
                                               child: Text(
                                                 // desc,
-                                                othersub.elementAt(index).body,
+                                                state
+                                                    .myother()
+                                                    .elementAt(index)
+                                                    .body,
 
                                                 style: Mystyle.regularTextStyle,
                                                 overflow: TextOverflow.ellipsis,

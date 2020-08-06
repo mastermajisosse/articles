@@ -67,15 +67,18 @@ class ArticleModel {
   }
 
   static ArticleModel fromSnapshot(DocumentSnapshot snap) {
+    var noimg =
+        "https://www.coraf.org/wp-content/themes/consultix/images/no-image-found-360x250.png";
+
     return ArticleModel(
       id: snap.data['id'],
-      image: snap.data['image'],
+      image: snap.data['image'].isEmpty ? noimg : snap.data['image'],
       title: snap.data['title'],
       body: snap.data['body'],
       authorName: snap.data['authorName'],
-      authorimg: snap.data['authorimg'],
+      authorimg:
+          snap.data['authorimg'].isEmpty ? noimg : snap.data['authorimg'],
       date: snap.data['date'].toDate(),
-      // date: snap.data['date'],
       country: snap.data['country'],
       tags: snap.data['tags'],
     );

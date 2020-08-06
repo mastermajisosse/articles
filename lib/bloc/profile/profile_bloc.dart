@@ -7,11 +7,10 @@ import 'package:afaq/repository/user_database_repo.dart';
 import 'package:bloc/bloc.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
-  UserDataBaseRepo profilesRepository;
+  UserDataBaseRepo profilesRepository = UserDataBaseRepo();
   StreamSubscription profilesSubscription;
-  UserRepository _userRepository;
-  ProfileBloc(this._userRepository, this.profilesRepository)
-      : super(ProfileLoadInProgress());
+  UserRepository _userRepository = UserRepository();
+  ProfileBloc() : super(ProfileLoadInProgress());
   // ProfileBloc() : super(ProfileLoadInProgress());
 
   @override

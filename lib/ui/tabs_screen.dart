@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:afaq/ui/add/add_screen.dart';
 import 'package:afaq/ui/home/home_screen.dart';
 import 'package:afaq/ui/others/contactus_screen.dart';
@@ -14,6 +16,27 @@ class _TabsScreenState extends State<TabsScreen> {
   bool callApi = true;
   int numb = 30;
   int selectedIndex = 0;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print(0);
+    // selectedIndex = 0;
+  }
+
+  Future<bool> checkcon() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        print('connected');
+      }
+      return true;
+    } on SocketException catch (_) {
+      print('not connected');
+      return false;
+    }
+  }
 
   void _onItemTapped(int index) {
     setState(() {

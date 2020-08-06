@@ -1,7 +1,11 @@
 import 'package:afaq/bloc/profile/bloc.dart';
 import 'package:afaq/main.dart';
 import 'package:afaq/repository/user_auth_repo.dart';
+import 'package:afaq/bloc/articles/articles_bloc.dart';
+import 'package:afaq/bloc/articles/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:afaq/ui/tabs_screen.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProfileScreen extends StatefulWidget {

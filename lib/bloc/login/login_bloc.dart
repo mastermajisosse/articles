@@ -7,13 +7,9 @@ import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  UserRepository _userRepository;
+  UserRepository _userRepository = UserRepository();
 
-  LoginBloc({
-    @required UserRepository userRepository,
-  })  : assert(userRepository != null),
-        _userRepository = userRepository,
-        super(LoginState.initial());
+  LoginBloc() : super(LoginState.initial());
 
   @override
   Stream<Transition<LoginEvent, LoginState>> transformEvents(

@@ -20,7 +20,7 @@ class ArticleAdded extends ArticlesEvent {
   List<Object> get props => [article];
 
   @override
-  String toString() => 'articleAdded { article: $article } , ${file.path}';
+  String toString() => 'articleAdded { article: $article }';
 }
 
 class ArticleUpdated extends ArticlesEvent {

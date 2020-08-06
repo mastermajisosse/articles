@@ -8,12 +8,9 @@ import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 
 class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
-  final UserRepository _userRepository;
+  final UserRepository _userRepository = UserRepository();
 
-  RegisterBloc({@required UserRepository userRepository})
-      : assert(userRepository != null),
-        _userRepository = userRepository,
-        super(RegisterState.initial());
+  RegisterBloc() : super(RegisterState.initial());
 
   @override
   Stream<Transition<RegisterEvent, RegisterState>> transformEvents(
@@ -75,6 +72,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   ) async* {
     yield RegisterState.loading();
     try {
+      // print(1);
       await _userRepository.signUp(
         pass: password,
         myuser: myuser,

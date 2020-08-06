@@ -15,9 +15,8 @@ class ArticlesRepo {
 
   final articlesCollection = Firestore.instance.collection('articles');
 
-  Future<void> addNewArticles(ArticleModel articleModel, file) async {
-    // need nicer way to make
-    // articleModel.authorName = await UserRepository().getUserName();
+  Future<void> addNewArticles(ArticleModel articleModel, file, name) async {
+    articleModel.authorName = name;
     return UploadImage().tofireBase(articleModel, file);
 
     // articlesCollection.add(articleModel.toEntity().toJson());
@@ -31,7 +30,7 @@ class ArticlesRepo {
     return articlesCollection
         .orderBy(
           'date',
-          descending: false,
+          descending: true,
         )
         .snapshots()
         .map((snapshot) {

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:afaq/ui/auth/login_screen.dart';
 import 'package:afaq/ui/auth/register_screen.dart';
 import 'package:afaq/utils/mystyle.dart';
@@ -14,6 +16,20 @@ class _TabAuthPageState extends State<TabAuthPage> {
   @override
   void initState() {
     super.initState();
+    checkcon();
+  }
+
+  Future<bool> checkcon() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        print('connected');
+      }
+      return true;
+    } on SocketException catch (_) {
+      print('not connected');
+      return false;
+    }
   }
 
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();

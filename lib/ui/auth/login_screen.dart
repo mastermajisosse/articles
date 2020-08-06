@@ -174,6 +174,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 child: InkWell(
                   onTap: () {
+                    FocusScope.of(context).unfocus();
+
                     _formKey.currentState.validate();
                     if (state.isFormValid &&
                         _emailController.text.isNotEmpty &&

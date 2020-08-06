@@ -1,14 +1,20 @@
 import 'dart:async';
 
 import 'package:afaq/models/article_model.dart';
+import 'package:afaq/repository/user_auth_repo.dart';
+import 'package:afaq/repository/user_database_repo.dart';
+
 import 'package:afaq/repository/articles_repo.dart';
 import 'package:bloc/bloc.dart';
+import 'package:afaq/models/user_model.dart';
 import 'bloc.dart';
 
 class ArticlesBloc extends Bloc<ArticlesEvent, ArticlesState> {
-  ArticlesRepo articlesRepository;
+  ArticlesRepo articlesRepository = ArticlesRepo();
   StreamSubscription articlesSubscription;
-  ArticlesBloc(this.articlesRepository) : super(ArticleLoadInProgress());
+  UserRepository _userRepository = UserRepository();
+  UserDataBaseRepo userDataBaseRepo = UserDataBaseRepo();
+  ArticlesBloc() : super(ArticleLoadInProgress());
 
   @override
   Stream<ArticlesState> mapEventToState(ArticlesEvent event) async* {
@@ -41,9 +47,15 @@ class ArticlesBloc extends Bloc<ArticlesEvent, ArticlesState> {
   }
 
   Stream<ArticlesState> _mapAddArticlesToState(ArticleAdded event) async* {
+    final uid = await _userRepository.getUser();
     yield ArticleAddLoading();
     try {
-      await articlesRepository.addNewArticles(event.article, event.file);
+      User useri = await userDataBaseRepo.profile(uid);
+      await articlesRepository.addNewArticles(
+        event.article,
+        event.file,
+        useri.firstname,
+      );
       yield ArticleAddSuccess();
     } catch (_) {
       yield ArticleAddErr();

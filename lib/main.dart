@@ -22,10 +22,6 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  final UserRepository _userRepository = UserRepository();
-  final ArticlesRepo articlesRepository = ArticlesRepo();
-  final UserDataBaseRepo userDataBaseRepo = UserDataBaseRepo();
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -39,22 +35,19 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider<AuthenticationBloc>(
             create: (context) =>
-                AuthenticationBloc(userRepository: _userRepository)
-                  ..add(AuthenticationStarted()),
+                AuthenticationBloc()..add(AuthenticationStarted()),
           ),
           BlocProvider<LoginBloc>(
-            create: (context) => LoginBloc(userRepository: _userRepository),
+            create: (context) => LoginBloc(),
           ),
           BlocProvider<RegisterBloc>(
-            create: (context) => RegisterBloc(userRepository: _userRepository),
+            create: (context) => RegisterBloc(),
           ),
           BlocProvider<ArticlesBloc>(
-            create: (context) =>
-                ArticlesBloc(articlesRepository)..add(ArticlesLoadSuccessE()),
+            create: (context) => ArticlesBloc()..add(ArticlesLoadSuccessE()),
           ),
           BlocProvider<ProfileBloc>(
-            create: (context) => ProfileBloc(_userRepository, userDataBaseRepo)
-              ..add(ProfilesLoadSuccessE()),
+            create: (context) => ProfileBloc()..add(ProfilesLoadSuccessE()),
           ),
         ],
         child: MiddleMan(),
@@ -78,13 +71,13 @@ class _MiddleManState extends State<MiddleMan> {
         if (state is AuthenticationSuccess) {
           return TabsScreen();
         }
-        // if (state is AuthenticationInitial) {
-        //   return SplashScreen();
-        // }
+        if (state is AuthenticationInitial) {
+          return CircularProgressIndicator();
+        }
         if (state is AuthenticationFailure) {
           return TabAuthPage();
         }
-        return TabsScreen();
+        return null;
       },
     );
   }

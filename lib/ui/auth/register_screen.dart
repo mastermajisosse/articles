@@ -209,6 +209,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         child: InkWell(
                           onTap: () async {
+                            FocusScope.of(context).unfocus();
+
                             _formKey.currentState.validate();
 
                             if (isRegisterButtonEnabled(state)) {

@@ -7,7 +7,16 @@ class UserRepository {
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   GoogleSignIn _googleSignIn = GoogleSignIn();
 
-  UserRepository();
+  // UserRepository();
+
+  User user;
+
+  static final UserRepository userRepository = UserRepository._internal();
+  UserRepository._internal();
+
+  factory UserRepository() {
+    return userRepository;
+  }
 
   User _userFromFirebaseUser(FirebaseUser user) {
     return user != null ? User(uid: user.uid) : null;
@@ -53,6 +62,7 @@ class UserRepository {
 
   Future<bool> isSignedIn() async {
     final currentUser = await _firebaseAuth.currentUser();
+
     return currentUser != null;
   }
 
